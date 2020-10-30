@@ -61,12 +61,20 @@ function getPlugin () {
 
       function getInType (i) {
         var rect = i.element.getBoundingClientRect(),
+          elementHeight = rect.height,
           elementTop = rect.top + viewportTop,
-          elementBottom = elementTop + rect.height,
+          elementBottom = elementTop + elementHeight,
           topIn = elementTop > viewportTop && elementTop < viewportBottom,
           bottomIn = elementBottom > viewportTop && elementBottom < viewportBottom,
+
+          allIn = (elementHeight >= viewportHeight) && (elementTop <= viewportTop) && (elementBottom >= viewportBottom),
+
           percentInView = topIn || bottomIn ? ((bottomIn ? elementBottom : viewportBottom) - (topIn ? elementTop : viewportTop)) / rect.height : 0,
+          percentInView = allIn ? 1 : percentInView,
+
           centerPercent = (elementTop - viewportTop + rect.height / 2) / viewportHeight,
+          centerPercent = allIn ? 1 : centerPercent,
+
           zeroPoint = viewportTop - rect.height,
           topPercent = (elementTop - zeroPoint) / (viewportBottom - zeroPoint),
           isAbove = percentInView === 0 && elementTop < viewportTop,
